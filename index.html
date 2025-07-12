@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>VandManden - Din Vandstation i Greve</title>
+<style>
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #e0f7fa;
+    color: #004d40;
+  }
+  header {
+    background-color: #00796b;
+    padding: 20px;
+    color: white;
+    text-align: center;
+  }
+  nav {
+    background-color: #004d40;
+    display: flex;
+    justify-content: center;
+  }
+  nav a {
+    color: white;
+    text-decoration: none;
+    padding: 15px 20px;
+    display: inline-block;
+    font-weight: 600;
+  }
+  nav a:hover {
+    background-color: #00796b;
+  }
+  main {
+    max-width: 900px;
+    margin: 30px auto;
+    background-color: #b2dfdb;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 0 12px rgba(0,0,0,0.1);
+  }
+  h1, h2 {
+    margin-top: 0;
+  }
+  section {
+    margin-bottom: 40px;
+  }
+  .btn {
+    background-color: #00796b;
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    margin-top: 15px;
+  }
+  .btn:hover {
+    background-color: #004d40;
+  }
+  label {
+    display: block;
+    margin: 10px 0 5px;
+    font-weight: 600;
+  }
+  input[type="text"], input[type="email"], input[type="password"] {
+    width: 100%;
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #004d40;
+    box-sizing: border-box;
+  }
+  .message {
+    margin-top: 12px;
+    font-weight: bold;
+  }
+  #map {
+    width: 100%;
+    height: 300px;
+    border-radius: 8px;
+  }
+  footer {
+    background-color: #00796b;
+    color: white;
+    text-align: center;
+    padding: 15px 0;
+  }
+  .nav-buttons {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  .nav-buttons button {
+    width: auto;
+    margin: 0 10px;
+    padding: 8px 15px;
+    background-color: #004d40;
+    border: none;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 600;
+  }
+  .nav-buttons button:hover {
+    background-color: #00796b;
+  }
+  #welcomeUser {
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>VandManden</h1>
+  <p>Din vandstation i Greve – Rent vand 24/7</p>
+</header>
+<nav>
+  <a href="#" data-section="home">Forside</a>
+  <a href="#" data-section="account">Min Konto</a>
+  <a href="#" data-section="contact">Kontakt</a>
+</nav>
+
+<main>
+  <!-- Forside -->
+  <section id="home" class="page-section">
+    <h2>Velkommen til VandManden</h2>
+    <p>Hos VandManden kan du tanke frisk og rent vand hele døgnet rundt.</p>
+    <p><strong>Adresse:</strong> Greve Bygade 50C, 2670 Greve</p>
+    <div id="map"></div>
+    <p>Vores vand er filtreret og kvalitetskontrolleret, så du altid får det bedste.</p>
+    <button class="btn" onclick="alert('Vi arbejder på at tilføje kortfunktioner - snart tilgængeligt!')">Find nærmeste vandstation</button>
+  </section>
+
+  <!-- Konto (Login / Opret bruger) -->
+  <section id="account" class="page-section" style="display:none;">
+    <div class="nav-buttons">
+      <button id="showLogin">Login</button>
+      <button id="showRegister">Opret bruger</button>
+    </div>
+
+    <form id="loginForm">
+      <h2>Login</h2>
+      <label for="loginEmail">Email</label>
+      <input type="email" id="loginEmail" required />
+      <label for="loginPassword">Adgangskode</label>
+      <input type="password" id="loginPassword" required />
+      <button type="submit">Log ind</button>
+      <div class="message" id="loginMessage"></div>
+    </form>
+
+    <form id="registerForm" style="display:none;">
+      <h2>Opret bruger</h2>
+      <label for="regName">Navn</label>
+      <input type="text" id="regName" required />
+      <label for="regEmail">Email</label>
+      <input type="email" id="regEmail" required />
+      <label for="regPassword">Adgangskode</label>
+      <input type="password" id="regPassword" required />
+      <button type="submit">Opret konto</button>
+      <div class="message" id="registerMessage"></div>
+    </form>
+
+    <div id="welcomeUser" style="display:none;">
+      <h2>Velkommen!</h2>
+      <p id="userNameDisplay"></p>
+      <button id="logoutBtn" class="btn">Log ud</button>
+    </div>
+  </section>
+
+  <!-- Kontakt -->
+  <section id="contact" class="page-section" style="display:none;">
+    <h2>Kontakt VandManden</h2>
+    <p>Har du spørgsmål? Kontakt os på:</p>
+    <ul>
+      <li>Email: <a href="mailto:support@vandmanden.dk">support@vandmanden.dk</a></li>
+      <li>Telefon: 12 34 56 78</li>
+      <li>Adresse: Greve Bygade 50C, 2670 Greve</li>
+    </ul>
+  </section>
+</main>
+
+<footer>
+  &copy; 2025 VandManden. Alle rettigheder forbeholdes.
+</footer>
+
+<script>
+  // Navigation
+  const navLinks = document.querySelectorAll('nav a');
+  const sections = document.querySelectorAll('.page-section');
+
+  navLinks.forEach(link => {
+    link.addEventListener('click', e => {
+      e.preventDefault();
+      const target = link.getAttribute('data-section');
+      sections.forEach(section => {
+        section.style.display = (section.id === target) ? 'block' : 'none';
+      });
+    });
+  });
+
+  // Login/Opret bruger - funktionalitet (fra tidligere)
+  const loginForm = document.getElementById('loginForm');
+  const registerForm = document.getElementById('registerForm');
+  const loginMessage = document.getElementById('loginMessage');
+  const registerMessage = document.getElementById('registerMessage');
+  const showLoginBtn = document.getElementById('showLogin');
+  const showRegisterBtn = document.getElementById('showRegister');
+  const welcomeUserDiv = document.getElementById('welcomeUser');
+  const userNameDisplay = document.getElementById('userNameDisplay');
+  const logoutBtn = document.getElementById('logoutBtn');
+
+  function showLogin() {
+    loginForm.style.display = 'block';
+    registerForm.style.display = 'none';
+    welcomeUserDiv.style.display = 'none';
+    loginMessage.textContent = '';
+    registerMessage.textContent = '';
+  }
+
+  function showRegister() {
+    loginForm.style.display = 'none';
+    registerForm.style.display = 'block';
+    welcomeUserDiv.style.display = 'none';
+    loginMessage.textContent = '';
+    registerMessage.textContent = '';
+  }
+
+  function showWelcome(name) {
+    loginForm.style.display = 'none';
+    registerForm.style.display = 'none';
+    welcomeUserDiv.style.display = 'block';
+    userNameDisplay.textContent = `Hej, ${name}!`;
+  }
+
+  showLoginBtn.addEventListener('click', showLogin);
+  showRegisterBtn.addEventListener('click', showRegister);
+
+  // Simpel bruger-database i localStorage (ikke sikkert, kun demo)
+  function getUsers() {
+    const users = localStorage.getItem('users');
+    return users ? JSON.parse(users) : [];
+  }
+  function saveUsers(users) {
+    localStorage.setItem('users', JSON.stringify(users));
+  }
+
+  registerForm.addEventListener('submit', e => {
+    e.preventDefault();
+    const name = document.getElementById('regName').value.trim();
+    const email = document.getElementById('regEmail').value.trim().toLowerCase();
+    const password = document.getElementById('regPassword').value;
+
+    if (!name || !email || !password) {
+      registerMessage.style.color = 'red';
+      registerMessage.textContent = 'Udfyld alle felter.';
+      return;
+    }
+
+    let users = getUsers();
+    if (users.find(u => u.email === email)) {
+      registerMessage.style.color = 'red';
+      registerMessage.textContent = 'Email er allerede registreret.';
+      return;
+    }
+
+    users.push({name, email, password});
+    saveUsers(users);
+
+    registerMessage.style.color = 'green';
+    registerMessage.textContent = 'Bruger oprettet! Du kan nu logge ind.';
+    registerForm.reset();
+  });
+
+  loginForm.addEventListener('submit', e => {
+    e.preventDefault();
+    const email = document.getElementById('loginEmail').value.trim().toLowerCase();
+    const password = document.getElementById('loginPassword').value;
+
+    let users = getUsers();
+    const user = users.find(u => u.email === email && u.password === password);
+    if (user) {
+      loginMessage.style.color = 'green';
+      loginMessage.textContent = 'Login succesfuldt!';
+      showWelcome(user.name);
+    } else {
+      loginMessage.style.color = 'red';
+      loginMessage.textContent = 'Forkert email eller adgangskode.';
+    }
+  });
+
+  logoutBtn.addEventListener('click', () => {
+    showLogin();
+  });
+
+  // Start på login visning
+  showLogin();
+
+  // Google Maps - indlejring via iframe
+  function initMap() {
+    const mapDiv = document.getElementById('map');
+    const iframe = document.createElement('iframe');
+    iframe.width = "100%";
+    iframe.height = "300";
+    iframe.style.border = 0;
+    iframe.loading = "lazy";
+    iframe.allowFullscreen = "";
+    iframe.referrerPolicy = "no-referrer-when-downgrade";
+    // Google Maps embed URL for Greve Bygade 50C, 2670 Greve
+    iframe.src = "https://www.google.com/maps/embed/v1/place?key=AIzaSyD-PLACEHOLDER&q=Greve+Bygade+50C,+2670+Greve";
+    mapDiv.appendChild(iframe);
+  }
+
+  // Note: For at få Google Maps til at virke, skal du erstatte "AIzaSyD-PLACEHOLDER" med en rigtig Google Maps API-nøgle.
+  // Alternativt kan du indsætte et almindeligt Google Maps iframe embed link manuelt.
+
+  // For demo, indsætter vi et offentligt kort-embed med adresse
+  function insertPublicMap() {
+    const mapDiv = document.getElementById('map');
+    mapDiv.innerHTML = `<iframe
+      src="https://www.google.com/maps?q=Greve+Bygade+50C,+2670+Greve&output=embed"
+      width="100%" height="300" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>`;
+  }
+
+  insertPublicMap();
+</script>
+</body>
+</html>
